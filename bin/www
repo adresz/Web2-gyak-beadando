@@ -87,6 +87,6 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
-  console.log("A szerver fut a 6969 porton")
-  console.log("http://localhost:6969")
+  console.log(`A szerver fut a ${port} porton`)
+  console.log(`http://localhost:${port}`)
 }

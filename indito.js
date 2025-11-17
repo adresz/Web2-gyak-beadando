@@ -1,41 +1,42 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+#!/usr/bin/env node
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+// indito.js – ez az egyetlen új fájl, amit létre kell hozni
 
-var app = express();
+const app = require('./app');        // betölti a teljes app.js-t
+const port = normalizePort(process.env.PORT || '6969');
+app.set('port', port);
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+const server = app.listen(port, () => {
+  console.log(`Szerver elindult! Az alábbi porttal: ${port}`);
+  console.log(`http://localhost:${port}`);
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+server.on('error', onError);
+server.on('listening', () => {});
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+// ---------- Segédfüggvények (másold be őket ide) ----------
+function normalizePort(val) {
+  const port = parseInt(val, 10);
+  if (isNaN(port)) return val;
+  if (port >= 0) return port;
+  return false;
+}
 
-module.exports = app;
+function onError(error) {
+  if (error.syscall !== 'listen') throw error;
+
+  const bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
+
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' admin/sudo jogosultság szükséges!');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' már foglalt! Próbáld másik porton.');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}

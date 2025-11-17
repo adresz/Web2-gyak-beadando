@@ -1,0 +1,58 @@
+# Node.js és npm
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Környezeti változók (soha ne commitold!)
+.env
+.env.local
+.env.development
+.env.production
+
+# npm cache és temp fájlok
+.npm
+.cache
+.eslintcache
+
+# VS Code beállítások (ha nem akarod megosztani a többiekkel)
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Windows thumbnail cache
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Mac rendszerfájlok
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Log fájlok
+logs
+*.log
+*.logs
+
+# Futásidejű adatok
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Build és dist mappák (ha később használsz valamilyen build toolt)
+dist/
+build/
+coverage/
+
+# Ideiglenes fájlok
+*.tmp
+*.temp
+*.bak
+*.swp
+*~.nib

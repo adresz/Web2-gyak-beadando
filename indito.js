@@ -14,7 +14,6 @@ const server = app.listen(port, () => {
 server.on('error', onError);
 server.on('listening', () => {});
 
-// ---------- Segédfüggvények (másold be őket ide) ----------
 function normalizePort(val) {
   const port = parseInt(val, 10);
   if (isNaN(port)) return val;

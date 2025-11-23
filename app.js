@@ -6,21 +6,14 @@ var logger = require('morgan');
 const mysql = require('mysql2');
 require('dotenv').config();
 
+
+
 const connection = mysql.createConnection({
   host:     process.env.DB_HOST,
   user:     process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   port:     process.env.DB_PORT
-});
-
-
-connection.connect(err => {
-  if (err) {
-    console.error('Adatbázis csatlakozási hiba: ' + err.stack);
-    process.exit(1);
-  }
-  console.log('Sikeresen csatlakozva az adatbázishoz');
 });
 
 var app = express();
@@ -30,7 +23,7 @@ var usersRouter = require('./routes/users');
 var contactRouter = require('./routes/contact');
 var messagesRouter = require('./routes/messages');
 var crudRouter = require('./routes/crud');
-
+const varosokRouter = require('./routes/varosok');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -47,7 +40,7 @@ app.use('/users', usersRouter);
 app.use('/contact', contactRouter);
 app.use('/messages', messagesRouter);
 app.use('/crud', crudRouter);
-
+app.use('/varosok', varosokRouter);
 
 
 

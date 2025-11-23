@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Városok listája</h2>
+  <a href="/crud/create" class="btn btn-success">Új város felvétele</a>
+</div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Név</th>
+      <th>Megye ID</th>
+      <th>Megyeszékhely</th>
+      <th>Megyei jogú</th>
+      <th>Műveletek</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% records.forEach(r => { %>
+      <tr>
+        <td><%= r.id %></td>
+        <td><%= r.nev %></td>
+        <td><%= r.megyeid %></td>
+        <td><%= r.megyeszekhely %></td>
+        <td><%= r.megyeijogu %></td>
+        <td>
+          <a href="/crud/edit/<%= r.id %>" class="btn btn-primary btn-sm">Szerkesztés</a>
+          <a href="/crud/delete/<%= r.id %>" class="btn btn-danger btn-sm">Törlés</a>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+
+</body>
+</html>

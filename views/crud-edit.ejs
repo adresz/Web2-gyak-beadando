@@ -1,0 +1,25 @@
+<form action="/crud/edit/<%= record.id %>" method="POST" class="needs-validation" novalidate>
+  <div class="mb-3">
+    <label class="form-label">Város neve</label>
+    <input type="text" class="form-control" name="nev" value="<%= record.nev %>" required minlength="3">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Megye ID</label>
+    <input type="number" class="form-control" name="megyeid" value="<%= record.megyeid %>" required min="1">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Megyeszékhely</label>
+    <select class="form-control" name="megyeszekhely" required>
+      <option value="0" <%= record.megyeszekhely === 0 ? 'selected' : '' %>>Nem</option>
+      <option value="1" <%= record.megyeszekhely === 1 ? 'selected' : '' %>>Igen</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Megyei jogú</label>
+    <select class="form-control" name="megyeijogu" required>
+      <option value="0" <%= record.megyeijogu === 0 ? 'selected' : '' %>>Nem</option>
+      <option value="1" <%= record.megyeijogu === 1 ? 'selected' : '' %>>Igen</option>
+    </select>
+  </div>
+  <button type="submit" class="btn btn-primary">Mentés</button>
+</form>

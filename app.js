@@ -29,6 +29,8 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var contactRouter = require('./routes/contact');
 var messagesRouter = require('./routes/messages');
+var crudRouter = require('./routes/crud');
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -44,6 +46,9 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/contact', contactRouter);
 app.use('/messages', messagesRouter);
+app.use('/crud', crudRouter);
+
+
 
 
 // catch 404 and forward to error handler

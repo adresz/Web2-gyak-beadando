@@ -9,7 +9,9 @@ require('dotenv').config();
 const connection = mysql.createConnection({
   host:     process.env.DB_HOST,
   user:     process.env.DB_USER,
-  database: process.env.DB_NAME
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port:     process.env.DB_PORT
 });
 
 
@@ -21,10 +23,11 @@ connection.connect(err => {
   console.log('Sikeresen csatlakozva az adatbázishoz');
 });
 
+var app = express();
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-
-var app = express();
+var contactRouter = require('./routes/contact');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -38,6 +41,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/contact', contactRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -55,4 +59,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+module.exports = app, connection;

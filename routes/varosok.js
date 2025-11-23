@@ -6,28 +6,32 @@ const connection = require('../database');
 const RECORDS_PER_PAGE = 50;
 
 router.get('/', (req, res) => {
-  let tabla = req.query.tabla || 'varos';           // melyik tábla?
-  const page   = Math.max(1, parseInt(req.query.page)   || 1);
-  const sort   = req.query.sort   || 'id';
-  const order  = (req.query.order === 'desc') ? 'DESC' : 'ASC';
+  let tabla = req.query.tabla || 'varos';
+  const page  = Math.max(1, parseInt(req.query.page) || 1);
+  const sort  = req.query.sort || 'id';
 
-  // csak ezt a hármat engedjük
+  // NORMALIZÁLT ORDER KEZELÉS – EZ JAVÍTJA MEG
+  const order = (req.query.order || 'ASC').toUpperCase() === 'DESC'
+    ? 'DESC'
+    : 'ASC';
+
+  // Csak ezt a három táblát engedjük
   if (!['varos', 'megye', 'lelekszam'].includes(tabla)) {
     tabla = 'varos';
   }
 
   const offset = (page - 1) * RECORDS_PER_PAGE;
 
-  // 1. Hány rekord van összesen ebben a táblában?
+  // Rekordszám
   const countSql = `SELECT COUNT(*) AS total FROM \`${tabla}\``;
 
   connection.query(countSql, (err, countResult) => {
     if (err) throw err;
 
     const totalRecords = countResult[0].total;
-    const totalPages   = Math.ceil(totalRecords / RECORDS_PER_PAGE);
+    const totalPages = Math.ceil(totalRecords / RECORDS_PER_PAGE);
 
-    // 2. Aktuális oldal adatai (rendezve)
+    // Oldal adatainak lekérése
     const dataSql = `
       SELECT * FROM \`${tabla}\`
       ORDER BY \`${sort}\` ${order}

@@ -1,128 +1,244 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html lang="hu">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= tabla.toUpperCase() %> – Nézegető</title>
-  <style>
-    body {font-family: Arial, sans-serif; background:#f4f6f9; margin:0; padding:20px;}
-    .box {max-width:1350px; margin:0 auto; background:#fff; border-radius:15px; box-shadow:0 10px 30px rgba(0,0,0,0.12); overflow:hidden;}
-    header {background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; padding:35px; text-align:center;}
-    h1 {margin:0; font-size:2.4rem;}
-    .controls {padding:20px; background:#f8f9fa; text-align:center;}
-    select {padding:12px 20px; font-size:1.1rem; border-radius:10px; border:2px solid #667eea; min-width:300px;}
+    <title>Haló</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/landed/assets/css/main.css" />
+    <noscript>
+        <link rel="stylesheet" href="/landed/assets/css/noscript.css" />
+    </noscript>
 
-    .loader {text-align:center; padding:60px; font-size:1.5rem; color:#666; display:none;}
-    .loader.show {display:block;}
-    .loader::after {content:""; display:inline-block; width:36px; height:36px; border:5px solid #667eea; border-top-color:transparent; border-radius:50%; animation:s 1s linear infinite; margin-left:15px;}
-    @keyframes s {to{transform:rotate(360deg);}}
+    <style>
+        :root {
+            --accent: #e5474b;
+        }
 
-    table {width:100%; border-collapse:separate; border-spacing:0;}
-    th {
-      background:#667eea; color:#fff; padding:16px 12px; cursor:pointer; user-select:none;
-      position:relative; text-align:left; font-weight:600; letter-spacing:0.5px;
-      border-right:1px solid #5a67d8;
-    }
-    th:last-child {border-right:none;}
-    th:hover {background:#5a67d8;}
-    th .sort-icon {margin-left:8px; font-size:1.1em; opacity:0.7;}
-    th.sorted .sort-icon {opacity:1; font-weight:bold;}
+        .tabla-valaszto {
+            text-align: center;
+            padding: 3rem 1rem 1.5rem;
+            background: linear-gradient(135deg, rgba(229, 71, 75, 0.08), transparent);
+            border-bottom: 1px solid rgba(229, 71, 75, 0.2);
+            margin-bottom: 2rem;
+        }
 
-    td {padding:12px; border-bottom:1px solid #eee; background:#fff;}
-    tr:hover td {background:#f8f9ff;}
+        .tabla-valaszto select {
+            padding: 16px 32px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent);
+            background: white;
+            border: 4px solid var(--accent);
+            border-radius: 16px;
+            min-width: 320px;
+            box-shadow: 0 10px 30px rgba(229, 71, 75, 0.15);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
 
-    .pagination {padding:20px; text-align:center; background:#f8f9fa;}
-    .pagination a, .pagination span {
-      display:inline-block; padding:10px 18px; margin:0 6px; background:#667eea; color:#fff;
-      text-decoration:none; border-radius:8px; min-width:40px;
-    }
-    .pagination a:hover {background:#5a67d8;}
-    .pagination .current {background:#333;}
-    .pagination .disabled {background:#ccc; cursor:not-allowed;}
+        .tabla-valaszto select:hover {
+            transform: translateY(-3px);
+        }
 
-    .info {padding:15px 25px; background:#eef1ff; font-size:1.1rem; text-align:center;}
-  </style>
+        .tabla-info {
+            text-align: center;
+            margin: 1.5rem 0 3rem;
+        }
+
+        .tabla-info h2 {
+            margin: 0 0 0.8rem;
+            color: white;
+            font-weight: 400;
+            font-size: 2.2rem;
+        }
+
+        .tabla-info .page-info {
+            font-size: 1.2rem;
+            color: #aaa;
+        }
+
+        .tabla-info .page-info strong {
+            color: var(--accent);
+            font-size: 1.4rem;
+        }
+
+        table th {
+            background: rgba(229, 71, 75, 0.18) !important;
+            color: white !important;
+            cursor: pointer;
+        }
+
+        table th small {
+            margin-left: 6px;
+            font-size: 0.8em;
+            opacity: 0.8;
+        }
+
+        .pagination {
+            justify-content: center;
+            margin-top: 3rem;
+        }
+
+        .pagination a,
+        .pagination span {
+            border-radius: 8px !important;
+            padding: 10px 20px !important;
+        }
+
+        .pagination .active {
+            background: var(--accent) !important;
+            color: white !important;
+        }
+
+        @media (max-width: 768px) {
+            .tabla-valaszto select {
+                min-width: 90%;
+                font-size: 1.3rem;
+                padding: 14px 20px;
+            }
+
+            .tabla-info h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        span.title {
+            display: none !important;
+        }
+    </style>
 </head>
-<body>
-  <div class="box">
-    <header>
-      <h1><%= tabla.charAt(0).toUpperCase() + tabla.slice(1) %> tábla</h1>
-      <p><%= totalRecords.toLocaleString('hu-HU') %> rekord</p>
-    </header>
 
-    <div class="controls">
-      <form method="GET">
-        <select name="tabla" onchange="document.getElementById('loader').classList.add('show'); this.form.submit()">
-          <option value="varos"     <%= tabla==='varos' ? 'selected' : '' %>>Városok</option>
-          <option value="megye"     <%= tabla==='megye' ? 'selected' : '' %>>Megyék</option>
-          <option value="lelekszam" <%= tabla==='lelekszam' ? 'selected' : '' %>>Lakossági adatok</option>
-        </select>
-      </form>
+<body class="is-preload">
+
+    <div id="page-wrapper">
+
+        <!-- Header -->
+        <header id="header">
+            <nav id="nav">
+                <ul>
+                    <li><a href="/landed">Kezdőlap</a></li>
+                    <li class="current"><a href="/varosok">Adatbázis</a></li>
+                    <li><a href="/contact">Kapcsolat</a></li>
+                    <li><a href="/crud">crud</a></li>
+                    <li><a href="/messages">üzenetek</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Main -->
+        <div id="main">
+            <div class="inner">
+
+                <!-- Tábla választó -->
+                <div class="tabla-valaszto">
+                    <form method="GET">
+                        <select name="tabla" onchange="this.form.submit()">
+                            <option value="varos" <%=tabla==='varos' ? 'selected' : '' %>>Városok</option>
+                            <option value="megye" <%=tabla==='megye' ? 'selected' : '' %>>Megyék</option>
+                            <option value="lelekszam" <%=tabla==='lelekszam' ? 'selected' : '' %>>Lakossági adatok
+                            </option>
+                        </select>
+                    </form>
+                </div>
+
+                <!-- Tábla címe és stat info -->
+                <div class="tabla-info">
+                    <h2>
+                        <%= tabla ? tabla.charAt(0).toUpperCase() + tabla.slice(1) : 'Város' %> tábla
+                    </h2>
+                    <div class="page-info">
+                        Oldal <strong>
+                            <%= page || 1 %>
+                        </strong> / <%= totalPages || 1 %>
+                            •
+                            <strong>
+                                <%= adatok ? adatok.length : 0 %>
+                            </strong> sor látható
+                    </div>
+                </div>
+
+                <!-- Tábla -->
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <% Object.keys(adatok[0] || {}).forEach(col=> { %>
+                                    <th onclick="sort('<%= col %>')">
+                                        <%= col.replace(/_/g, ' ' ).toUpperCase() %>
+                                            <% if (sort===col) { %>
+                                                <small>
+                                                    <%= order==='ASC' ? '↑' : '↓' %>
+                                                </small>
+                                                <% } else { %>
+                                                    <small style="opacity:0.3">↕</small>
+                                                    <% } %>
+                                    </th>
+                                    <% }) %>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% adatok.forEach(row=> { %>
+                                <tr>
+                                    <% Object.values(row).forEach(val=> { %>
+                                        <td>
+                                            <%= val===null ? '–' : val %>
+                                        </td>
+                                        <% }) %>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Lapozás -->
+                <ul class="pagination">
+                    <li>
+                        <%= page> 1 ? `<a href="?tabla=${tabla}&page=${page-1}&sort=${sort}&order=${order}">Előző</a>` :
+                            '<span class="disabled">Előző</span>' %>
+                    </li>
+                    <li><a href="#" class="page active">
+                            <%= page %>
+                        </a></li>
+                    <li>
+                        <%= page < totalPages ? `<a href="?tabla=${tabla}&page=${page+1}&sort=${sort}&order=${order}">
+                            Következő</a>` : '<span class="disabled">Következő</span>' %>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+
     </div>
 
-    <div class="loader" id="loader">Kérjük, várjon…</div>
+    <!-- Scripts -->
+    <script src="/landed/assets/js/jquery.min.js"></script>
+    <script src="/landed/assets/js/jquery.scrolly.min.js"></script>
+    <script src="/landed/assets/js/jquery.dropotron.min.js"></script>
+    <script src="/landed/assets/js/jquery.scrollex.min.js"></script>
+    <script src="/landed/assets/js/browser.min.js"></script>
+    <script src="/landed/assets/js/breakpoints.min.js"></script>
+    <script src="/landed/assets/js/util.js"></script>
+    <script src="/landed/assets/js/main.js"></script>
 
-    <div class="info">
-      Oldal <%= page %> / <%= totalPages %> – <%= adatok.length %> rekord megjelenítve
-    </div>
+    <script>
+        function sort(col) {
+            const url = new URL(window.location);
+            const currentSort = url.searchParams.get('sort');
+            const currentOrder = (url.searchParams.get('order') || 'ASC').toUpperCase();
 
-    <table>
-      <thead>
-        <tr>
-          <% Object.keys(adatok[0] || {}).forEach(col => { %>
-            <th onclick="sort('<%= col %>')" class="<%= sort === col ? 'sorted' : '' %>">
-              <%= col.replace(/_/g, ' ').toUpperCase() %>
-              <span class="sort-icon">
-                <% if (sort === col) { %>
-                  <%= order === 'ASC' ? '↑' : '↓' %>
-                <% } else { %>
-                  ↕
-                <% } %>
-              </span>
-            </th>
-          <% }) %>
-        </tr>
-      </thead>
-      <tbody>
-        <% adatok.forEach(row => { %>
-          <tr>
-            <% Object.values(row).forEach(val => { %>
-              <td>
-                <% if (val !== null && typeof val === 'number' && val > 999) { %>
-                  <%= val.toLocaleString('hu-HU') %>
-                <% } else { %>
-                  <%= val ?? '–' %>
-                <% } %>
-              </td>
-            <% }) %>
-          </tr>
-        <% }) %>
-      </tbody>
-    </table>
+            let newOrder = 'ASC';
+            if (currentSort === col && currentOrder === 'ASC') {
+                newOrder = 'DESC';
+            }
 
-    <div class="pagination">
-      <% if (hasPrev) { %>
-        <a href="?tabla=<%= tabla %>&page=<%= prevPage %>&sort=<%= sort %>&order=<%= order %>">« Előző</a>
-      <% } else { %><span class="disabled">« Előző</span><% } %>
+            url.searchParams.set('sort', col);
+            url.searchParams.set('order', newOrder);
+            url.searchParams.set('page', '1');
+            window.location = url.toString();
+        }
+    </script>
 
-      <span class="current"><%= page %></span>
-
-      <% if (hasNext) { %>
-        <a href="?tabla=<%= tabla %>&page=<%= nextPage %>&sort=<%= sort %>&order=<%= order %>">Következő »</a>
-      <% } else { %><span class="disabled">Következő »</span><% } %>
-    </div>
-  </div>
-
-  <script>
-    function sort(col) {
-      const currentOrder = "<%= order %>";
-      const newOrder = (col === "<%= sort %>" && currentOrder === "ASC") ? "desc" : "ASC";
-      location.href = `?tabla=<%= tabla %>&page=1&sort=${col}&order=${newOrder}`;
-    }
-
-    window.addEventListener('load', () => {
-      document.getElementById('loader').classList.remove('show');
-    });
-  </script>
 </body>
+
 </html>

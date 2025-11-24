@@ -1,92 +1,118 @@
-var express = require('express');
-var router = express.Router();
-const connection = require('../database');
+// routes/crud.js – TELJESEN ÁTÍRVA async/await-re (mysql2/promise)
+const express = require('express');
+const router = express.Router();
+const db = require('../database'); // ← ez a promise pool!
 
-// READ – lista megjelenítése 
-router.get('/', (req, res) => {
-  const sql = 'SELECT * FROM varos ORDER BY id ASC';
-  connection.query(sql, (err, results) => {
-    if (err) return res.status(500).send('Adatbázis hiba!');
-    res.render('crud-list', { records: results });
-  });
+// LISTA – minden város megjelenítése
+router.get('/', async (req, res) => {
+  try {
+    const [records] = await db.query('SELECT * FROM varos ORDER BY id ASC');
+    res.render('crud-list', { records });
+  } catch (err) {
+    console.error('CRUD lista hiba:', err);
+    res.status(500).send('Adatbázis hiba a városok betöltésekor!');
+  }
 });
 
-// CREATE – új rekord 
-router.get('/create', (req, res) => {
-  const sql = 'SELECT id, nev FROM megye ORDER BY nev ASC';
-  connection.query(sql, (err, results) => {
-    if (err) return res.status(500).send('Adatbázis hiba a megyék lekérdezésekor!');
-    res.render('crud-create', { megyek: results });
-  });
+// CREATE – új város űrlap
+router.get('/create', async (req, res) => {
+  try {
+    const [megyek] = await db.query('SELECT id, nev FROM megye ORDER BY nev ASC');
+    res.render('crud-create', { megyek });
+  } catch (err) {
+    console.error('Megye lekérdezés hiba:', err);
+    res.status(500).send('Nem sikerült betölteni a megyéket!');
+  }
 });
 
-// CREATE – új rekord mentése 
-router.post('/create', (req, res) => {
+// CREATE – új város mentése
+router.post('/create', async (req, res) => {
   let { id, nev, megyeid, megyeszekhely, megyeijogu } = req.body;
 
-  id = parseInt(id);
-  megyeid = parseInt(megyeid);
-  megyeszekhely = parseInt(megyeszekhely);
-  megyeijogu = parseInt(megyeijogu);
+  // Biztonságos konvertálás
+  id = parseInt(id) || null;
+  megyeid = parseInt(megyeid) || 0;
+  megyeszekhely = parseInt(megyeszekhely) || 0;
+  megyeijogu = parseInt(megyeijogu) || 0;
 
-  const sql = `
-    INSERT INTO varos (id, nev, megyeid, megyeszekhely, megyeijogu, created_at, updated_at)
-    VALUES (?, ?, ?, ?, ?, NOW(), NOW())
-  `;
-  connection.query(sql, [id, nev, megyeid, megyeszekhely, megyeijogu], (err) => {
-    if (err) {
-      console.error("CREATE hiba:", err);
-      return res.status(500).send("Adatbázis hiba!");
-    }
+  try {
+    await db.query(
+      `INSERT INTO varos 
+       (id, nev, megyeid, megyeszekhely, megyeijogu, created_at, updated_at) 
+       VALUES (?, ?, ?, ?, ?, NOW(), NOW())`,
+      [id, nev, megyeid, megyeszekhely, megyeijogu]
+    );
     res.redirect('/crud');
-  });
+  } catch (err) {
+    console.error('Város létrehozása sikertelen:', err);
+    res.status(500).send('Nem sikerült létrehozni a várost! (Lehet, hogy az ID már létezik?)');
+  }
 });
 
-// UPDATE – szerkesztés
-router.get('/edit/:id', (req, res) => {
+// EDIT – szerkesztési űrlap
+router.get('/edit/:id', async (req, res) => {
   const id = req.params.id;
-  const sql1 = 'SELECT * FROM varos WHERE id = ?';
-  const sql2 = 'SELECT id, nev FROM megye ORDER BY nev ASC';
 
-  connection.query(sql1, [id], (err, results) => {
-    if (err) return res.status(500).send('Adatbázis hiba!');
-    if (results.length === 0) return res.status(404).send('Rekord nem található');
+  try {
+    const [[record]] = await db.query('SELECT * FROM varos WHERE id = ?', [id]);
+    const [megyek] = await db.query('SELECT id, nev FROM megye ORDER BY nev ASC');
 
-    connection.query(sql2, (err2, megyek) => {
-      if (err2) return res.status(500).send('Adatbázis hiba a megyék lekérdezésekor!');
-      res.render('crud-edit', { record: results[0], megyek });
-    });
-  });
+    if (!record) {
+      return res.status(404).send('A keresett város nem létezik!');
+    }
+
+    res.render('crud-edit', { record, megyek });
+  } catch (err) {
+    console.error('Szerkesztés oldal hiba:', err);
+    res.status(500).send('Adatbázis hiba');
+  }
 });
 
-// UPDATE – módosítás mentése
-router.post('/edit/:id', (req, res) => {
+// EDIT – módosítás mentése
+router.post('/edit/:id', async (req, res) => {
   const id = req.params.id;
   let { nev, megyeid, megyeszekhely, megyeijogu } = req.body;
 
-  megyeid = parseInt(megyeid);
-  megyeszekhely = parseInt(megyeszekhely);
-  megyeijogu = parseInt(megyeijogu);
+  megyeid = parseInt(megyeid) || 0;
+  megyeszekhely = parseInt(megyeszekhely) || 0;
+  megyeijogu = parseInt(megyeijogu) || 0;
 
-  const sql = `
-    UPDATE varos
-    SET nev=?, megyeid=?, megyeszekhely=?, megyeijogu=?, updated_at=NOW()
-    WHERE id=?
-  `;
-  connection.query(sql, [nev, megyeid, megyeszekhely, megyeijogu, id], (err) => {
-    if (err) return res.status(500).send('Adatbázis hiba!');
+  try {
+    const result = await db.query(
+      `UPDATE varos 
+       SET nev = ?, megyeid = ?, megyeszekhely = ?, megyeijogu = ?, updated_at = NOW() 
+       WHERE id = ?`,
+      [nev, megyeid, megyeszekhely, megyeijogu, id]
+    );
+
+    // Ha nem módosult semmi → valószínűleg rossz ID
+    if (result[0].affectedRows === 0) {
+      return res.status(404).send('Nincs ilyen város!');
+    }
+
     res.redirect('/crud');
-  });
+  } catch (err) {
+    console.error('Frissítés hiba:', err);
+    res.status(500).send('Nem sikerült frissíteni a várost!');
+  }
 });
 
-// DELETE – rekord törlése
-router.get('/delete/:id', (req, res) => {
+// DELETE – város törlése (GET vagy POST, ahogy neked kényelmes)
+router.get('/delete/:id', async (req, res) => {
   const id = req.params.id;
-  const sql = 'DELETE FROM varos WHERE id = ?';
-  connection.query(sql, [id], (err) => {
-    if (err) return res.status(500).send('Adatbázis hiba!');
+
+  try {
+    const result = await db.query('DELETE FROM varos WHERE id = ?', [id]);
+    
+    if (result[0].affectedRows === 0) {
+      return res.status(404).send('Nincs ilyen város!');
+    }
+
     res.redirect('/crud');
-  });
+  } catch (err) {
+    console.error('Törlés hiba:', err);
+    res.status(500).send('Nem lehet törölni ezt a várost! (Lehet, hogy más tábla hivatkozik rá)');
+  }
 });
 
 module.exports = router;

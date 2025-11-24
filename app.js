@@ -53,9 +53,9 @@ const varosokRouter = require('./routes/varosok');
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/contact', contactRouter);
-app.use('/messages', messagesRouter);
 app.use('/crud', crudRouter);
 app.use('/varosok', varosokRouter);
+app.use('/admin', require('./routes/admin'));
 
 // ADD ONLY THIS ONE LINE
 app.use('/', require('./routes/auth'));   // ← connects your Login/Register controllers
@@ -71,6 +71,11 @@ const requireRole = (roles = []) => (req, res, next) => {
 
 app.use('/messages', requireRole(['admin', 'registered']), messagesRouter);
 app.use('/crud',     requireRole(['admin']), crudRouter);
+
+
+app.use((req, res) => {
+    res.status(404).render("404");
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

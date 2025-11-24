@@ -1,14 +1,12 @@
 <!DOCTYPE HTML>
 <html lang="hu">
-    
+
 <!-- HEAD (partial) -->
 <%- include('partials/head', { 
     title: "Üzenetek – Magyarország Atlasz" 
 }) %>
 <style>
-    span.title {
-            display: none !important;
-        }
+    span.title { display: none !important; }
 </style>
 
 <body class="is-preload">
@@ -24,43 +22,50 @@
 
             <!-- Page title -->
             <div class="tabla-info">
-                <h2>Üzenetek</h2>
+                <h2>Üzenetek <small>(<%= messages.length %> db)</small></h2>
             </div>
 
-            <!-- Messages table -->
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Név</th>
-                            <th>Email</th>
-                            <th>Város</th>
-                            <th>Kor</th>
-                            <th>Üzenet</th>
-                            <th>Beküldve</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% messages.forEach(msg => { %>
+            <!-- Ha nincs üzenet -->
+            <% if (messages.length === 0) { %>
+                <p class="text-center" style="color: #aaa; font-size: 1.2em; margin: 3em 0;">
+                    Még nincs egyetlen üzenet sem.
+                </p>
+            <% } else { %>
+
+                <!-- Messages table -->
+                <div class="table-wrapper">
+                    <table class="alt">
+                        <thead>
                             <tr>
-                                <td><%= msg.nev %></td>
-                                <td><%= msg.email %></td>
-                                <td><%= msg.varos %></td>
-                                <td><%= msg.kor %></td>
-                                <td><%= msg.uzenet %></td>
-                                <td><%= msg.created_at.toLocaleString() %></td>
+                                <th>Név</th>
+                                <th>Email</th>
+                                <th>Város</th>
+                                <th>Kor</th>
+                                <th>Üzenet</th>
+                                <th>Beküldve</th>
                             </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            <% messages.forEach(msg => { %>
+                                <tr>
+                                    <td><strong><%= msg.nev %></strong></td>
+                                    <td><%= msg.email %></td>
+                                    <td><%= msg.varos || '—' %></td>
+                                    <td><%= msg.kor ? msg.kor + ' év' : '—' %></td>
+                                    <td style="max-width: 300px; word-wrap: break-word;"><%= msg.uzenet %></td>
+                                    <td><%= new Date(msg.created_at).toLocaleString('hu-HU') %></td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+
+            <% } %>
 
         </div>
     </div>
 
 </div>
-
-<!-- Scripts -->
 
 </body>
 </html>

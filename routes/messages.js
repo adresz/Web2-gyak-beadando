@@ -1,23 +1,35 @@
-var express = require('express');
-var router = express.Router();
-const connection = require('../database');
+// routes/messages.js
+const express = require('express');
+const router = express.Router();
+const db = require('../database'); // ← ez a mysql2/promise pool!
 
-// GET /messages – üzenetek listája (mindenki láthatja még)
-router.get('/', (req, res) => {
-  const sql = `
-    SELECT nev, email, varos, kor, uzenet, created_at
-    FROM uzenetek
-    ORDER BY created_at DESC
-  `;
+router.get('/', async (req, res) => {
+  try {
+    const [messages] = await db.query(`
+      SELECT 
+        nev, 
+        email, 
+        varos, 
+        kor, 
+        uzenet, 
+        created_at 
+      FROM uzenetek 
+      ORDER BY created_at DESC
+    `);
 
-  connection.query(sql, (err, results) => {
-    if (err) {
-      console.error("Hiba az üzenetek lekérésekor:", err);
-      return res.status(500).send("Adatbázis hiba történt.");
-    }
+    // Átadjuk a template-nek a tömböt + a bejelentkezett felhasználót (ha van)
+    res.render('messages', {
+      messages: messages || [],
+      user: req.session.user || null
+    });
 
-    res.render('messages', { messages: results });
-  });
+  } catch (err) {
+    console.error('Hiba az üzenetek lekérdezésekor:', err);
+    res.status(500).render('error', {
+      message: 'Nem sikerült betölteni az üzeneteket!',
+      error: process.env.NODE_ENV === 'development' ? err : {}
+    });
+  }
 });
 
 module.exports = router;

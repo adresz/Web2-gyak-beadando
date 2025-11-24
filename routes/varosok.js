@@ -1,61 +1,61 @@
-// routes/varosok.js
+// routes/varosok.js – TELJESEN ÁTÍRVA async/await-re (mysql2/promise)
 const express = require('express');
 const router = express.Router();
-const connection = require('../database');
+const db = require('../database'); // ← ez a mysql2/promise pool!
 
 const RECORDS_PER_PAGE = 50;
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   let tabla = req.query.tabla || 'varos';
-  const page  = Math.max(1, parseInt(req.query.page) || 1);
-  const sort  = req.query.sort || 'id';
+  let page = Math.max(1, parseInt(req.query.page) || 1);
+  let sort = req.query.sort || 'id';
 
-  // NORMALIZÁLT ORDER KEZELÉS – EZ JAVÍTJA MEG
-  const order = (req.query.order || 'ASC').toUpperCase() === 'DESC'
-    ? 'DESC'
-    : 'ASC';
+  // Biztonságos order (ASC vagy DESC)
+  const order = (req.query.order || 'ASC').toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
 
-  // Csak ezt a három táblát engedjük
-  if (!['varos', 'megye', 'lelekszam'].includes(tabla)) {
+  // Csak engedélyezett táblák
+  const allowedTables = ['varos', 'megye', 'lelekszam'];
+  if (!allowedTables.includes(tabla)) {
     tabla = 'varos';
   }
 
   const offset = (page - 1) * RECORDS_PER_PAGE;
 
-  // Rekordszám
-  const countSql = `SELECT COUNT(*) AS total FROM \`${tabla}\``;
-
-  connection.query(countSql, (err, countResult) => {
-    if (err) throw err;
-
-    const totalRecords = countResult[0].total;
+  try {
+    // 1. Összes rekord számolása
+    const [[countResult]] = await db.query(`SELECT COUNT(*) AS total FROM \`${tabla}\``);
+    const totalRecords = countResult.total;
     const totalPages = Math.ceil(totalRecords / RECORDS_PER_PAGE);
 
-    // Oldal adatainak lekérése
-    const dataSql = `
-      SELECT * FROM \`${tabla}\`
-      ORDER BY \`${sort}\` ${order}
-      LIMIT ? OFFSET ?
-    `;
+    // 2. Adatok lekérése (pagináció + rendezés)
+    const [adatok] = await db.query(
+      `SELECT * FROM \`${tabla}\` 
+       ORDER BY \`${sort}\` ${order} 
+       LIMIT ? OFFSET ?`,
+      [RECORDS_PER_PAGE, offset]
+    );
 
-    connection.query(dataSql, [RECORDS_PER_PAGE, offset], (err, adatok) => {
-      if (err) throw err;
-
-      res.render('varosok', {
-        tabla,
-        adatok,
-        page,
-        totalPages,
-        totalRecords,
-        sort,
-        order,
-        hasPrev: page > 1,
-        hasNext: page < totalPages,
-        prevPage: page - 1,
-        nextPage: page + 1
-      });
+    // 3. Renderelés
+    res.render('varosok', {
+      tabla,
+      adatok: adatok || [],
+      page,
+      totalPages,
+      totalRecords,
+      sort,
+      order,
+      hasPrev: page > 1,
+      hasNext: page < totalPages,
+      prevPage: page - 1,
+      nextPage: page + 1
     });
-  });
+
+  } catch (err) {
+    console.error('Hiba a városok/megyék lekérdezésekor:', err);
+    res.status(500).render('error', {
+      message: 'Adatbázis hiba történt az adatok betöltésekor!'
+    });
+  }
 });
 
 module.exports = router;

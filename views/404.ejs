@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>404 – Az oldal nem létezik</title>
+    <%- include('partials/head', { title: "404 – Az oldal nem létezik" }) %>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center; /* horizontálisan középre */
+            align-items: center;     /* vertikálisan középre */
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h2 {
+            font-weight: 700;
+            color: #333;
+        }
+
+        p {
+            color: #555;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary {
+            border-radius: 50px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+        span.title { display: none !important; }
+    </style>
+</head>
+<body>
+
+<%- include('partials/header') %>
+
+<div class="main-content">
+    <div class="card">
+        <h2 class="mb-4">Úgy tűnik ez nem nyert 😢</h2>
+        <p>Nem található oldalra próbáltál navigálni, próbálj egy másik létező oldalra navigálni, vagy térj vissza a főoldalra🤠</p>
+        <a href="/" class="btn btn-primary mt-3">Vissza a főoldalra</a>
+    </div>
+</div>
+
+</body>
+</html>

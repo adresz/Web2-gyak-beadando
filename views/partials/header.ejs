@@ -1,11 +1,27 @@
 <header id="header">
     <nav id="nav">
         <ul>
-            <li><a href="/landed">Kezdőlap</a></li>
+            <li><a href="/">Kezdőlap</a></li>
             <li class="current"><a href="/varosok">Adatbázis</a></li>
             <li><a href="/contact">Kapcsolat</a></li>
-            <li><a href="/crud">crud</a></li>
-            <li><a href="/messages">üzenetek</a></li>
+            <li><a href="/crud">CRUD</a></li>
+            <% if (user && user.role==='admin' ) { %>
+                <li><a href="/admin">Admin</a></li>
+                <% } %>
+
+                    <!-- CSAK BEJELENTKEZETT FELHASZNÁLÓ LÁTJA -->
+                    <% if (user) { %>
+                        <li><a href="/messages">Üzenetek</a></li>
+                        <% } %>
+
+                            <!-- Bejelentkezés / Kijelentkezés -->
+                            <% if (user) { %>
+                                <li><a href="/logout" class="button small">Kijelentkezés (<%= user.name %>)</a></li>
+                                <% } else { %>
+                                    <li><a href="/login" class="button small">Bejelentkezés</a></li>
+                                    <% } %>
+
+
         </ul>
     </nav>
 </header>

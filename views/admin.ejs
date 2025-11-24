@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html lang="hu">
+<%- include('partials/head', { title: "Admin – Felhasználók" }) %>
+<style> span.title { display: none !important; } </style>
+
+<body class="is-preload">
+<div id="page-wrapper">
+
+    <%- include('partials/header', { active: 'admin' }) %>
+
+    <div id="main">
+        <div class="inner">
+
+            <header class="major special">
+                <h2>Adminisztrátori felület</h2>
+                <p>Összes felhasználó: <strong><%= users.length %> fő</strong></p>
+            </header>
+
+            <!-- Frissítés gomb -->
+            <div class="align-left mb-4">
+                <a href="/admin" class="button small icon solid fa-sync">Frissítés</a>
+            </div>
+
+            <!-- Táblázat -->
+            <div class="table-wrapper">
+                <table class="alt">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Név</th>
+                            <th>E-mail</th>
+                            <th>Szerepkör</th>
+                            <th>Regisztrált</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (users.length === 0) { %>
+                            <tr><td colspan="5" class="text-center">Nincs regisztrált felhasználó.</td></tr>
+                        <% } else { %>
+                            <% users.forEach(u => { %>
+                                <tr>
+                                    <td><strong>#<%= u.id %></strong></td>
+                                    <td><%= u.name %></td>
+                                    <td><%= u.email %></td>
+                                    <td>
+                                        <span class="badge <%= u.role === 'admin' ? 'primary' : '' %>">
+                                            <%= u.role === 'admin' ? 'Adminisztrátor' : 'Felhasználó' %>
+                                        </span>
+                                    </td>
+                                    <td><%= new Date(u.created_at).toLocaleString('hu-HU') %></td>
+                                </tr>
+                            <% }) %>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="align-center mt-5">
+                <a href="/" class="button large">Vissza a főoldalra</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

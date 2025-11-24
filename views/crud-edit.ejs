@@ -1,25 +1,74 @@
-<form action="/crud/edit/<%= record.id %>" method="POST" class="needs-validation" novalidate>
-  <div class="mb-3">
-    <label class="form-label">Város neve</label>
-    <input type="text" class="form-control" name="nev" value="<%= record.nev %>" required minlength="3">
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Város szerkesztése</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h2 class="mb-4 text-center">Város szerkesztése</h2>
+
+          <form action="/crud/edit/<%= record.id %>" method="POST" class="needs-validation" novalidate>
+            <div class="mb-3">
+              <label class="form-label">Város neve</label>
+              <input type="text" class="form-control" name="nev" value="<%= record.nev %>" required minlength="3">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Megye ID</label>
+              <input type="number" class="form-control" name="megyeid" value="<%= record.megyeid %>" required min="1">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Megyeszékhely</label>
+              <select class="form-control" name="megyeszekhely" required>
+                <option value="0" <%= record.megyeszekhely === 0 ? 'selected' : '' %>>Nem</option>
+                <option value="1" <%= record.megyeszekhely === 1 ? 'selected' : '' %>>Igen</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Megyei jogú</label>
+              <select class="form-control" name="megyeijogu" required>
+                <option value="0" <%= record.megyeijogu === 0 ? 'selected' : '' %>>Nem</option>
+                <option value="1" <%= record.megyeijogu === 1 ? 'selected' : '' %>>Igen</option>
+              </select>
+            </div>
+
+            <!-- Mentés gomb LocalStorage üzenettel -->
+            <button type="submit" class="btn btn-primary w-100"
+                    onclick="localStorage.setItem('message', 'Város módosítva!')">
+              Mentés
+            </button>
+            <a href="/crud" class="btn btn-secondary w-100 mt-2">Vissza a listához</a>
+          </form>
+
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="mb-3">
-    <label class="form-label">Megye ID</label>
-    <input type="number" class="form-control" name="megyeid" value="<%= record.megyeid %>" required min="1">
-  </div>
-  <div class="mb-3">
-    <label class="form-label">Megyeszékhely</label>
-    <select class="form-control" name="megyeszekhely" required>
-      <option value="0" <%= record.megyeszekhely === 0 ? 'selected' : '' %>>Nem</option>
-      <option value="1" <%= record.megyeszekhely === 1 ? 'selected' : '' %>>Igen</option>
-    </select>
-  </div>
-  <div class="mb-3">
-    <label class="form-label">Megyei jogú</label>
-    <select class="form-control" name="megyeijogu" required>
-      <option value="0" <%= record.megyeijogu === 0 ? 'selected' : '' %>>Nem</option>
-      <option value="1" <%= record.megyeijogu === 1 ? 'selected' : '' %>>Igen</option>
-    </select>
-  </div>
-  <button type="submit" class="btn btn-primary">Mentés</button>
-</form>
+</div>
+
+<script>
+  // Bootstrap validáció
+  (function () {
+    'use strict'
+    const forms = document.querySelectorAll('.needs-validation')
+    Array.from(forms).forEach(form => {
+      form.addEventListener('submit', event => {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+        form.classList.add('was-validated')
+      }, false)
+    })
+  })();
+</script>
+
+</body>
+</html>

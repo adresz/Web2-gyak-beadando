@@ -11,6 +11,8 @@
   <a href="/crud/create" class="btn btn-success">Új város felvétele</a>
 </div>
 
+<!-- Sikerüzenet ide kerül -->
+  <div id="msg" class="alert alert-success text-center mt-3" style="display:none;"></div>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -32,12 +34,23 @@
         <td><%= r.megyeijogu %></td>
         <td>
           <a href="/crud/edit/<%= r.id %>" class="btn btn-primary btn-sm">Szerkesztés</a>
-          <a href="/crud/delete/<%= r.id %>" class="btn btn-danger btn-sm">Törlés</a>
+          <a href="/crud/delete/<%= r.id %>" class="btn btn-danger btn-sm" onclick="localStorage.setItem('message', 'Város törölve!')">Törlés</a>
         </td>
       </tr>
     <% }) %>
   </tbody>
 </table>
+
+<!-- LocalStorage script -->
+<script>
+  const msg = localStorage.getItem('message');
+  if (msg) {
+    const box = document.getElementById('msg');
+    box.textContent = msg;
+    box.style.display = "block";
+    localStorage.removeItem('message'); // frissítés után eltűnik
+  }
+</script>
 
 </body>
 </html>

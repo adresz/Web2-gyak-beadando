@@ -1,0 +1,122 @@
+<!DOCTYPE HTML>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>Regisztráció – Magyarország Atlasz</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/landed/assets/css/main.css" />
+    <noscript><link rel="stylesheet" href="/landed/assets/css/noscript.css" /></noscript>
+
+    <style>
+        :root { --accent: #e5474b; }
+        #main { padding: 4rem 1rem 6rem; }
+
+        .card {
+            background: rgba(0,0,0,0.6);
+            border: none;
+            border-radius: 16px;
+            padding: 2.5rem;
+            max-width: 420px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(229,71,75,0.2);
+        }
+
+        .form-control:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 0.2rem rgba(229,71,75,0.25);
+        }
+
+        .btn-success {
+            background: #28a745;
+            border-color: #28a745;
+        }
+        .btn-success:hover {
+            background: #218838;
+            border-color: #1e7e34;
+        }
+
+        h2, p, label { color: white; }
+        a:hover { color: #ff6b6b; }
+    </style>
+</head>
+<body class="is-preload">
+
+<div id="page-wrapper">
+
+    <!-- Header (nav + hamburger) -->
+    <%- include('../partials/header') %>
+
+    <!-- Main -->
+    <div id="main">
+        <div class="inner">
+
+            <div class="card">
+                <h2 class="text-center">Regisztráció</h2>
+
+                <% if (error) { %>
+                    <div class="alert alert-danger mb-3"><%= error %></div>
+                <% } %>
+
+                <form method="POST" action="/register" class="needs-validation" novalidate>
+                    <div class="mb-3">
+                        <label class="form-label">Név</label>
+                        <input type="text" name="name" class="form-control" value="<%= old?.name || '' %>" required>
+                        <div class="invalid-feedback">A név megadása kötelező!</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">E-mail</label>
+                        <input type="email" name="email" class="form-control" value="<%= old?.email || '' %>" required>
+                        <div class="invalid-feedback">Érvényes e-mail címet adj meg!</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Jelszó</label>
+                        <input type="password" name="password" class="form-control" required minlength="6">
+                        <div class="invalid-feedback">A jelszónak legalább 6 karakternek kell lennie!</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Jelszó újra</label>
+                        <input type="password" name="password_confirmation" class="form-control" required>
+                        <div class="invalid-feedback">Ismételd meg a jelszót!</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100">Regisztráció</button>
+                </form>
+
+                <p class="text-center mt-3">
+                    Már van fiókod? <a href="/login">Bejelentkezés</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Landed JS (hamburger, nav, responsive) -->
+<script src="/landed/assets/js/jquery.min.js"></script>
+<script src="/landed/assets/js/jquery.scrolly.min.js"></script>
+<script src="/landed/assets/js/jquery.dropotron.min.js"></script>
+<script src="/landed/assets/js/jquery.scrollex.min.js"></script>
+<script src="/landed/assets/js/browser.min.js"></script>
+<script src="/landed/assets/js/breakpoints.min.js"></script>
+<script src="/landed/assets/js/util.js"></script>
+<script src="/landed/assets/js/main.js"></script>
+
+<script>
+  // HTML5/Bootstrap validation
+  (() => {
+    'use strict'
+    const forms = document.querySelectorAll('.needs-validation')
+    forms.forEach(form => {
+      form.addEventListener('submit', event => {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+        form.classList.add('was-validated')
+      }, false)
+    })
+  })()
+</script>
+
+</body>
+</html>

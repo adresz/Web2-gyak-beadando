@@ -2,7 +2,7 @@
 
 // indito.js – ez az egyetlen új fájl, amit létre kell hozni
 
-const app = require('./app');        // betölti a teljes app.js-t
+const {app} = require('./app');        // betölti a teljes app.js-t
 const port = normalizePort(process.env.PORT || '6969');
 app.set('port', port);
 

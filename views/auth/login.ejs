@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>Bejelentkezés – Magyarország Atlasz</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/landed/assets/css/main.css" />
+    <noscript><link rel="stylesheet" href="/landed/assets/css/noscript.css" /></noscript>
+
+    <style>
+        :root { --accent: #e5474b; }
+
+        #main { padding: 4rem 1rem 6rem; }
+
+        .card {
+            background: rgba(0,0,0,0.6);
+            border: none;
+            border-radius: 16px;
+            padding: 2.5rem;
+            max-width: 420px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(229,71,75,0.2);
+        }
+
+        .form-control:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 0.2rem rgba(229,71,75,0.25);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            transition: 0.3s;
+        }
+        .btn-primary:hover {
+            background: #c63a3f;
+            border-color: #c63a3f;
+        }
+
+        h2, p, label { color: white; }
+        a:hover { color: #ff6b6b; }
+    </style>
+</head>
+<body class="is-preload">
+
+<%- include('../partials/header') %>
+
+<div id="page-wrapper">
+    <div id="main">
+        <div class="inner">
+            <div class="card">
+                <h2 class="text-center">Bejelentkezés</h2>
+
+                <% if (error) { %>
+                  <div class="alert alert-danger"><%= error %></div>
+                <% } %>
+
+                <form method="POST" action="/login" class="needs-validation" novalidate>
+                    <div class="mb-3">
+                        <label>E-mail</label>
+                        <input type="email" name="email" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Jelszó</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Belépés</button>
+                </form>
+
+                <p class="text-center mt-3">
+                  Nincs fiókod? <a href="/register">Regisztrálj itt</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts: jQuery + Landed template JS -->
+<script src="/landed/assets/js/jquery.min.js"></script>
+<script src="/landed/assets/js/jquery.scrolly.min.js"></script>
+<script src="/landed/assets/js/jquery.dropotron.min.js"></script>
+<script src="/landed/assets/js/jquery.scrollex.min.js"></script>
+<script src="/landed/assets/js/browser.min.js"></script>
+<script src="/landed/assets/js/breakpoints.min.js"></script>
+<script src="/landed/assets/js/util.js"></script>
+<script src="/landed/assets/js/main.js"></script>
+
+<script>
+  // Bootstrap/HTML5 validation
+  (() => {
+    'use strict'
+    const forms = document.querySelectorAll('.needs-validation')
+    forms.forEach(form => {
+      form.addEventListener('submit', event => {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+        form.classList.add('was-validated')
+      }, false)
+    })
+  })()
+</script>
+
+</body>
+</html>

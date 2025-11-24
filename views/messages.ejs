@@ -1,69 +1,17 @@
 <!DOCTYPE HTML>
 <html lang="hu">
-<head>
-    <meta charset="UTF-8">
-    <title>Üzenetek – Magyarország Atlasz</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/landed/assets/css/main.css" />
-    <noscript><link rel="stylesheet" href="/landed/assets/css/noscript.css" /></noscript>
+    
+<!-- HEAD (partial) -->
+<%- include('partials/head', { 
+    title: "Üzenetek – Magyarország Atlasz" 
+}) %>
 
-    <style>
-        :root { --accent: #e5474b; }
-
-        .tabla-info {
-            text-align: center;
-            margin: 1.5rem 0 3rem;
-        }
-        .tabla-info h2 {
-            margin: 0 0 0.8rem;
-            color: white;
-            font-weight: 400;
-            font-size: 2.2rem;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: rgba(255,255,255,0.05);
-            color: white;
-        }
-        table th, table td {
-            padding: 0.8rem 1rem;
-            text-align: left;
-        }
-        table th {
-            background: rgba(229,71,75,0.18);
-            cursor: pointer;
-        }
-        table tr:nth-child(even) {
-            background: rgba(255,255,255,0.05);
-        }
-
-        @media (max-width: 768px) {
-            .tabla-info h2 { font-size: 1.8rem; }
-            table th, table td { padding: 0.6rem 0.8rem; font-size: 0.9rem; }
-        }
-
-        /* Hide the auto-generated title span if present */
-        span.title { display: none !important; }
-    </style>
-</head>
 <body class="is-preload">
 
 <div id="page-wrapper">
 
-    <!-- Header -->
-    <header id="header">
-        <nav id="nav">
-            <ul>
-                <li><a href="/landed">Kezdőlap</a></li>
-                <li><a href="/varosok">Adatbázis</a></li>
-                <li><a href="/contact">Kapcsolat</a></li>
-                <li><a href="/crud">CRUD</a></li>
-                <li class="current"><a href="/messages">Üzenetek</a></li>
-            </ul>
-        </nav>
-    </header>
+    <!-- HEADER (partial) -->
+    <%- include('partials/header', { active: 'messages' }) %>
 
     <!-- Main -->
     <div id="main">
@@ -108,14 +56,6 @@
 </div>
 
 <!-- Scripts -->
-<script src="/landed/assets/js/jquery.min.js"></script>
-<script src="/landed/assets/js/jquery.scrolly.min.js"></script>
-<script src="/landed/assets/js/jquery.dropotron.min.js"></script>
-<script src="/landed/assets/js/jquery.scrollex.min.js"></script>
-<script src="/landed/assets/js/browser.min.js"></script>
-<script src="/landed/assets/js/breakpoints.min.js"></script>
-<script src="/landed/assets/js/util.js"></script>
-<script src="/landed/assets/js/main.js"></script>
 
 </body>
 </html>

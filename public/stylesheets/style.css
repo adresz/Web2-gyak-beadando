@@ -69,6 +69,11 @@ header nav a { color:white; margin-left:10px; text-decoration:none; }
   margin-bottom: 1rem;
 }
 
+.cities .card h3,
+.cities .card p {
+  color: #000000;
+}
+
 .cities .btn {
   display: inline-block;
   margin-top: 0.8rem;
@@ -126,6 +131,7 @@ header nav a { color:white; margin-left:10px; text-decoration:none; }
 
 .discounted .card {
   background: white;
+  color: #000000;
   border-radius: 12px;
   padding: 1rem;
   width: 250px;
@@ -148,6 +154,12 @@ header nav a { color:white; margin-left:10px; text-decoration:none; }
   color: white;
   text-decoration: none;
   border-radius: 6px;
+}
+
+.discounted .card h3,
+.discounted .card p,
+.discounted .card strong {
+  color: #000000;  
 }
 
 .contact-info {
@@ -185,6 +197,10 @@ header nav a { color:white; margin-left:10px; text-decoration:none; }
   text-decoration: underline;
 }
 
+.contact-list li strong {
+  color: #000000 !important;  
+}
+
 .testimonials {
   background: #f4f4f4;
   padding: 4rem 1rem;
@@ -208,6 +224,7 @@ header nav a { color:white; margin-left:10px; text-decoration:none; }
 
 .testimonials .card {
   background: white;
+  color: #000;
   border-radius: 12px;
   padding: 2rem;
   width: 300px;
@@ -216,10 +233,12 @@ header nav a { color:white; margin-left:10px; text-decoration:none; }
 }
 
 .testimonials .card p {
+  color: #000;
   margin-bottom: 1rem;
 }
 
 .testimonials .card h4 {
+  color: #000;
   font-weight: 600;
   font-style: normal;
   color: #e5474b;

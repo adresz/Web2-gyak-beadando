@@ -1,95 +1,147 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html lang="hu">
+
+<!-- HEAD (partial stílusban, de inline, hogy egy fájlban működjön) -->
+
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <title>TigerTravel - Főoldal</title>
-  <link rel="stylesheet" href='/stylesheets/style.css'>
+
+  <!-- Css -->
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <!-- Ha a másik oldaladon van assets/css/main.css vagy hasonló, ide tedd -->
+  <!-- <link rel="stylesheet" href="/assets/css/main.css"> -->
+
+  <!-- Font Awesome (opcionális, ha ikonokat használsz a headerben) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <%- include('partials/head', { title: " – Magyarország Atlasz" }) %>
+
+<style>
+ span.title { display: none !important; }
+</style>
 </head>
-<body>
-  <!-- Header -->
-  <header>
-    <h1>TigerTravel Utazási Iroda</h1>
-    
-  </header>
-
-  <!-- Hero szekció -->
-  <section class="hero">
-    <h2>Fedezd fel az országot velünk!</h2>
-    <a href="/varosok" class="btn">Nézd meg elérhető úticéljainkat:</a>
-  </section>
-
- <!-- Városok szekció -->
-<section class="cities">
-  <h2>Kiemelt úti célok</h2>
-  <div class="city-cards">
-    <% cities.forEach(city => { %>
-      <div class="card">
-        <img src="<%= city.image %>" alt="<%= city.name %>">
-        <h3><%= city.name %></h3>
-        <p><%= city.description %></p>
-        <a href="/varosok/<%= city.id %>" class="btn">Tovább</a>
-      </div>
-    <% }) %>
-  </div>
-</section>
 
 
-  <!-- Leárazott utak szekció -->
-<section class="discounted">
-  <h2>Leárazott utak</h2>
-  <div class="discounted-cards">
-    <% discountedTrips.forEach(trip => { %>
-      <div class="card">
-        <img src="<%= trip.image %>" alt="<%= trip.name %>">
-        <h3><%= trip.name %></h3>
-        <p><%= trip.description %></p>
-        <p><strong>Ár: <%= trip.price %> Ft</strong></p>
-        <a href="/varosok/<%= trip.id %>" class="btn">Foglalás</a>
-      </div>
-    <% }) %>
-  </div>
-</section>
+<body class="is-preload">
 
+  <div id="page-wrapper">
 
-  <!-- Rólunk szekció -->
-<section class="about">
-  <h2>Rólunk</h2>
-  <p>Évek óta szervezünk felejthetetlen utazásokat ügyfeleinknek, legyen szó rövid városnézésről vagy hosszabb körutakról. 
-  Csapatunk elkötelezett a minőség és a megbízhatóság mellett, mindig a legjobb ajánlatokat keressük a piacon. 
-  Személyre szabott szolgáltatásaink révén minden utazás élménnyé válik, és igyekszünk minden részletet a lehető legkényelmesebbé tenni. 
-  Büszkék vagyunk arra, hogy ügyfeleink visszatérő vendégek, és szívesen ajánlanak minket barátaiknak, családtagjaiknak. 
-  Legyen szó belföldi kalandokról vagy külföldi utazásról, a TigerTravel csapata mindent megtesz, hogy az utazás emlékezetes és zökkenőmentes legyen. 
-  Szeretettel várjuk minden kedves utazni vágyó jelentkezését, és örömmel segítünk megtalálni a tökéletes úti célt.</p>
-</section>
+    <!-- HEADER (ugyanolyan, mint a második példádban) -->
+    <%- include('partials/header', { active: 'home' }) %>
 
-<!-- Ügyfélvélemények szekció -->
-<section class="testimonials">
-  <h2>Ügyfeleink mondták</h2>
-  <div class="testimonial-cards">
-    <% testimonials.forEach(testimonial => { %>
-      <div class="card">
-        <p>"<%= testimonial.text %>"</p>
-        <h4>- <%= testimonial.name %>, <%= testimonial.city %></h4>
-      </div>
-    <% }) %>
-  </div>
-</section>
+      <!-- Hero szekció -->
+      <section class="hero">
+        <div class="inner">
+          <h2>Fedezd fel az országot velünk!</h2>
+          <a href="/varosok" class="btn">Nézd meg elérhető úticéljainkat</a>
+        </div>
+      </section>
 
+      <!-- Városok szekció -->
+      <section class="cities" id="cities">
+        <div class="inner">
+          <h2>Kiemelt úti célok</h2>
+          <div class="city-cards">
+            <% cities.forEach(city=> { %>
+              <div class="card">
+                <img src="<%= city.image %>" alt="<%= city.name %>">
+                <h3>
+                  <%= city.name %>
+                </h3>
+                <p>
+                  <%= city.description %>
+                </p>
+                <a href="/varosok/<%= city.id %>" class="btn">Tovább</a>
+              </div>
+              <% }) %>
+          </div>
+        </div>
+      </section>
 
-<!-- Elérhetőségek szekció -->
-<section class="contact-info">
-  <h2>Elérhetőségeink</h2>
-  <ul class="contact-list">
-    <li><strong>Telefon:</strong> <a href="tel:+3612345678">+36 1 234 5678</a></li>
-    <li><strong>Email:</strong> <a href="mailto:info@tigertravel.hu">info@tigertravel.hu</a></li>
-    <li><strong>Facebook:</strong> <a href="https://www.facebook.com/TigerTravel" target="_blank">facebook.com/TigerTravel</a></li>
-    <li><strong>Instagram:</strong> <a href="https://www.instagram.com/TigerTravel" target="_blank">instagram.com/TigerTravel</a></li>
-  </ul>
-</section>
+      <!-- Leárazott utak szekció -->
+      <section class="discounted">
+        <div class="inner">
+          <h2>Leárazott utak</h2>
+          <div class="discounted-cards">
+            <% discountedTrips.forEach(trip=> { %>
+              <div class="card">
+                <img src="<%= trip.image %>" alt="<%= trip.name %>">
+                <h3>
+                  <%= trip.name %>
+                </h3>
+                <p>
+                  <%= trip.description %>
+                </p>
+                <p><strong>Ár: <%= trip.price %> Ft</strong></p>
+                <a href="/varosok/<%= trip.id %>" class="btn">Foglalás</a>
+              </div>
+              <% }) %>
+          </div>
+        </div>
+      </section>
 
-  <!-- Footer -->
-  <footer>
-    <p>&copy; 2025 TigerTravel</p>
+      <!-- Rólunk szekció -->
+      <section class="about" id="about">
+        <div class="inner">
+          <h2>Rólunk</h2>
+          <p>Évek óta szervezünk felejthetetlen utazásokat ügyfeleinknek, legyen szó rövid városnézésről vagy hosszabb
+            körutakról.
+            Csapatunk elkötelezett a minőség és a megbízhatóság mellett, mindig a legjobb ajánlatokat keressük a piacon.
+            Személyre szabott szolgáltatásaink révén minden utazás élménnyé válik, és igyekszünk minden részletet a
+            lehető legkényelmesebbé tenni.
+            Büszkék vagyunk arra, hogy ügyfeleink visszatérő vendégek, és szívesen ajánlanak minket barátaiknak,
+            családtagjaiknak.
+            Legyen szó belföldi kalandokról vagy külföldi utazásról, a TigerTravel csapata mindent megtesz, hogy az
+            utazás emlékezetes és zökkenőmentes legyen.
+            Szeretettel várjuk minden kedves utazni vágyó jelentkezését, és örömmel segítünk megtalálni a tökéletes úti
+            célt.</p>
+        </div>
+      </section>
+
+      <!-- Ügyfélvélemények szekció -->
+      <section class="testimonials" id="testimonials">
+        <div class="inner">
+          <h2>Ügyfeleink mondták</h2>
+          <div class="testimonial-cards">
+            <% testimonials.forEach(testimonial=> { %>
+              <div class="card">
+                <p>"<%= testimonial.text %>"</p>
+                <h4>- <%= testimonial.name %>, <%= testimonial.city %>
+                </h4>
+              </div>
+              <% }) %>
+          </div>
+        </div>
+      </section>
+
+      <!-- Elérhetőségek szekció -->
+      <section class="contact-info" id="contact">
+        <div class="inner">
+          <h2>Elérhetőségeink</h2>
+          <ul class="contact-list">
+            <li><strong>Telefon:</strong> <a href="tel:+3612345678">+36 1 234 5678</a></li>
+            <li><strong>Email:</strong> <a href="mailto:info@tigertravel.hu">info@tigertravel.hu</a></li>
+            <li><strong>Facebook:</strong> <a href="https://www.facebook.com/TigerTravel"
+                target="_blank">facebook.com/TigerTravel</a></li>
+            <li><strong>Instagram:</strong> <a href="https://www.instagram.com/TigerTravel"
+                target="_blank">instagram.com/TigerTravel</a></li>
+          </ul>
+        </div>
+      </section>
+
+  </div> <!-- page-wrapper vége -->
+
+  <!-- Footer (ha külön partialod van rá, ide include-old, különben inline) -->
+  <footer id="footer">
+    <div class="inner">
+      <p>&copy; 2025 TigerTravel – Minden jog fenntartva.</p>
+    </div>
   </footer>
+
+  <!-- Scripts (ha a header partialban nincs benne) -->
+  <script src="/javascripts/main.js"></script>
+
 </body>
+
 </html>

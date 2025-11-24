@@ -1,56 +1,118 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  <div class="d-flex justify-content-between align-items-center mb-3">
-  <h2>Városok listája</h2>
-  <a href="/crud/create" class="btn btn-success">Új város felvétele</a>
-</div>
+<!DOCTYPE HTML>
+<html lang="hu">
 
-<!-- Sikerüzenet ide kerül -->
-  <div id="msg" class="alert alert-success text-center mt-3" style="display:none;"></div>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Név</th>
-      <th>Megye ID</th>
-      <th>Megyeszékhely</th>
-      <th>Megyei jogú</th>
-      <th>Műveletek</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% records.forEach(r => { %>
-      <tr>
-        <td><%= r.id %></td>
-        <td><%= r.nev %></td>
-        <td><%= r.megyeid %></td>
-        <td><%= r.megyeszekhely %></td>
-        <td><%= r.megyeijogu %></td>
-        <td>
-          <a href="/crud/edit/<%= r.id %>" class="btn btn-primary btn-sm">Szerkesztés</a>
-          <a href="/crud/delete/<%= r.id %>" class="btn btn-danger btn-sm" onclick="localStorage.setItem('message', 'Város törölve!')">Törlés</a>
-        </td>
-      </tr>
-    <% }) %>
-  </tbody>
-</table>
+<%- include('partials/head', { 
+    title: "Városok kezelése – TigerTravel Admin" 
+}) %>
 
-<!-- LocalStorage script -->
-<script>
-  const msg = localStorage.getItem('message');
-  if (msg) {
-    const box = document.getElementById('msg');
-    box.textContent = msg;
-    box.style.display = "block";
-    localStorage.removeItem('message'); // frissítés után eltűnik
-  }
-</script>
+<style>
+  span.title { display: none !important; }
+</style>
+
+<body class="is-preload">
+    <div id="page-wrapper">
+
+        <%- include('partials/header', { active: 'cities' }) %>
+
+        <section id="main" class="wrapper">
+            <div class="inner">
+
+                <h2 class="mb-5 text-center">Városok listája</h2>
+
+                <!-- Új város gomb – közepes, elegáns -->
+                <div class="text-right mb-4">
+                    <a href="/crud/create" class="button primary icon solid fa-plus">
+                        Új város felvétele
+                    </a>
+                </div>
+
+                <!-- Sikerüzenet -->
+                <div id="msg" class="alert alert-success text-center mb-4" style="display:none;"></div>
+
+                <!-- Táblázat -->
+                <div class="table-wrapper">
+                    <table class="alt">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Város neve</th>
+                                <th>Megye ID</th>
+                                <th>Megyeszékhely</th>
+                                <th>Megyei jogú</th>
+                                <th class="text-center" style="width:180px;">Műveletek</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% records.forEach(r => { %>
+                                <tr>
+                                    <td><%= r.id %></td>
+                                    <td><strong><%= r.nev %></strong></td>
+                                    <td><%= r.megyeid || '–' %></td>
+                                    <td class="text-center"><%= r.megyeszekhely ? 'Igen' : 'Nem' %></td>
+                                    <td class="text-center"><%= r.megyeijogu ? 'Igen' : 'Nem' %></td>
+                                    <td class="text-center">
+                                        <!-- Flex-el egymás mellett tartjuk a gombokat -->
+                                        <div class="actions-inline">
+                                            <a href="/crud/edit/<%= r.id %>"
+                                               class="button small primary"
+                                               title="Szerkesztés">
+                                                <i class="fas fa-edit"></i> Szerkesztés
+                                            </a>
+                                            <a href="/crud/delete/<%= r.id %>"
+                                               class="button small icon-only"
+                                               style="background:#e74c3c; border-color:#c0392b;"
+                                               title="Törlés"
+                                               onclick="localStorage.setItem('message', 'Város sikeresen törölve!')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+
+                <% if (records.length === 0) { %>
+                    <p class="text-center text-muted mt-5">Még nincs egyetlen város sem felvéve.</p>
+                <% } %>
+
+            </div>
+        </section>
+
+    </div>
+
+
+    <script>
+        const msg = localStorage.getItem('message');
+        if (msg) {
+            const box = document.getElementById('msg');
+            box.textContent = msg;
+            box.style.display = "block";
+            setTimeout(() => {
+                box.style.opacity = "0";
+                setTimeout(() => box.style.display = "none", 600);
+            }, 4000);
+            localStorage.removeItem('message');
+        }
+    </script>
+
+    <!-- Gombok egymás mellett tartása minden képernyőméreten -->
+    <style>
+        .actions-inline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px; /* távolság a két gomb között */
+            flex-wrap: nowrap; /* soha nem törnek külön sorba */
+        }
+        .icon-only {
+            width: 38px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
 
 </body>
 </html>
